@@ -6,15 +6,20 @@ import com.rafi607062330092.assesment2.database.ResepDao
 import com.rafi607062330092.assesment2.model.Resep
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class DetailViewModel(private val dao: ResepDao) : ViewModel() {
-    fun insert(judul: String, kategori: String, bahan: ArrayList<String>, langkah: ArrayList<String>, tanggal: String) {
+    private val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US)
+
+    fun insert(judul: String, kategori: String, bahan: List<String>, langkah: List<String>) {
         val resep = Resep(
-            judul       = judul,
-            kategori    = kategori,
-            bahan       = bahan,
-            langkah     = langkah,
-            tanggal     = tanggal
+            judul = judul,
+            kategori = kategori,
+            bahan = bahan,
+            langkah = langkah,
+            tanggal = formatter.format(Date())
         )
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -22,14 +27,14 @@ class DetailViewModel(private val dao: ResepDao) : ViewModel() {
         }
     }
 
-    fun update(id: Long, judul: String, kategori: String, bahan: ArrayList<String>, langkah: ArrayList<String>, tanggal: String) {
+    fun update(id: Long, judul: String, kategori: String, bahan: List<String>, langkah: List<String>) {
         val resep = Resep(
-            id      = id,
-            judul       = judul,
-            kategori    = kategori,
-            bahan       = bahan,
-            langkah     = langkah,
-            tanggal     = tanggal
+            id = id,
+            judul = judul,
+            kategori = kategori,
+            bahan = bahan,
+            langkah = langkah,
+            tanggal = formatter.format(Date())
         )
 
         viewModelScope.launch(Dispatchers.IO) {

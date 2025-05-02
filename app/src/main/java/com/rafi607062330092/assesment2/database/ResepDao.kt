@@ -16,8 +16,11 @@ interface ResepDao {
     @Update
     suspend fun update(resep: Resep)
 
-    @Query("SELECT * FROM resep ORDER BY tanggal ASC")
+    @Query("SELECT * FROM resep ORDER BY kategori ASC")
     fun getResep(): Flow<List<Resep>>
+
+    @Query("SELECT DISTINCT kategori FROM resep ORDER BY kategori ASC")
+    fun getCategory(): Flow<List<String>>
 
     @Query("SELECT *  FROM resep WHERE id = :id")
     suspend fun getResepById(id: Long): Resep?

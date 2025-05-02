@@ -5,7 +5,11 @@
     <string name="tambah_resep">Tambah Resep</string>
     <string name="tambah_error">Belum bisa tambah Resep.</string>
     <string name="judul">Judul</string>
-    <string name="isi_resep">Isi Catatan</string>
+    <string name="kategori">Kategori</string>
+    <string name="langkah">Langkah-langkah</string>
+    <string name="bahan">Bahan-bahan</string>
+    <string name="tanggal">Tanggal</string>
+    <string name="isi_resep">Isi Resep</string>
     <string name="kembali">Kembali</string>
     <string name="simpan">Simpan</string>
     <string name="edit_resep">Ubah Resep</string>

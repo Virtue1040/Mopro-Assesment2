@@ -9,7 +9,7 @@ data class Resep(
     val id: Long = 0L,
     val judul: String,
     val kategori: String,
-    val bahan: ArrayList<String>,
-    val langkah: ArrayList<String>,
+    val bahan: List<String>,
+    val langkah: List<String>,
     val tanggal: String
 )

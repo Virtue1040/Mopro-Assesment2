@@ -61,17 +61,21 @@ fun DetailScreen(navController: NavController, id: Long? = null) {
     val factory = ViewModelFactory(db.dao)
     val viewModel: DetailViewModel = viewModel(factory = factory)
 
-    var nama by remember { mutableStateOf("") }
-    var nim by remember { mutableStateOf("") }
-    var kelas by remember { mutableStateOf(items[0]) }
+    var judul by remember { mutableStateOf("") }
+    var kategori by remember { mutableStateOf("") }
+    var bahan by remember { mutableStateOf(listOf<String>()) }
+    var langkah by remember { mutableStateOf(listOf<String>()) }
+    var tanggal by remember { mutableStateOf("") }
     var showDialog by remember { mutableStateOf(false) }
 
     LaunchedEffect(true) {
         if (id == null) { return@LaunchedEffect }
         val data = viewModel.getResep(id) ?: return@LaunchedEffect
-        nama = data.nama
-        nim = data.nim
-        kelas = data.kelas
+        judul = data.judul
+        kategori = data.kategori
+        bahan = data.bahan
+        langkah = data.langkah
+        tanggal = data.tanggal
     }
 
     Scaffold(
@@ -99,14 +103,14 @@ fun DetailScreen(navController: NavController, id: Long? = null) {
                 actions = {
                     IconButton(
                         onClick = {
-                            if (nama == "" || nim == "") {
+                            if (judul == "" || kategori == "" || bahan.isEmpty() || langkah.isEmpty()) {
                                 Toast.makeText(context, R.string.invalid, Toast.LENGTH_LONG).show()
                                 return@IconButton
                             }
                             if (id == null) {
-                                viewModel.insert(nama, nim, kelas)
+                                viewModel.insert(judul, kategori, bahan, langkah)
                             } else {
-                                viewModel.update(id, nama, nim, kelas)
+                                viewModel.update(id, judul, kategori, bahan, langkah)
                             }
                             navController.popBackStack()
                         }
@@ -139,16 +143,29 @@ fun DetailScreen(navController: NavController, id: Long? = null) {
             )
         }
     ) { padding ->
-        FormMahasiswa(
-            nama = nama,
-            onNameChange = { nama = it },
-            kelas = kelas,
-            onKelasChange = {
-                kelas = it
+        FormResep(
+            judul = judul,
+            kategori = kategori,
+            bahan = bahan,
+            langkah = langkah,
+            tanggal = tanggal,
+            onJudulChange = {
+                judul = it
+            },
+            onKategoriChange = {
+                kategori = it
+            },
+            onBahanChange = {
+                bahan = it.split(",")
+            },
+            onLangkahChange = {
+                langkah = it.split(",")
+            },
+            onTanggalChange = {
+                tanggal = it
             },
             modifier = Modifier.padding(padding),
-            nim = nim,
-            onNimChange = { nim = it }
+
         )
 
         if (id != null && showDialog) {
@@ -198,17 +215,21 @@ fun DeleteAction(delete: () -> Unit) {
 }
 
 @Composable
-fun FormMahasiswa(nama: String, nim: String, kelas: String, onKelasChange: (String) -> Unit, onNameChange: (String) -> Unit, onNimChange: (String) -> Unit, modifier: Modifier) {
+fun FormResep(judul: String, kategori: String, bahan: List<String>, langkah: List<String>, tanggal: String,
+              onJudulChange: (String) -> Unit, onKategoriChange: (String) -> Unit,
+              onBahanChange: (String) -> Unit, onLangkahChange: (String) -> Unit,
+              onTanggalChange: (String) -> Unit,
+              modifier: Modifier) {
     Column(
         modifier = modifier.fillMaxSize().padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         OutlinedTextField(
-            value = nama,
+            value = judul,
             onValueChange = {
-                onNameChange(it)
+                onJudulChange(it)
             },
-            label = { Text(text = stringResource(R.string.nama))  },
+            label = { Text(text = stringResource(R.string.judul))  },
             singleLine = true,
             keyboardOptions = KeyboardOptions(
                 capitalization = KeyboardCapitalization.Words,
@@ -217,11 +238,11 @@ fun FormMahasiswa(nama: String, nim: String, kelas: String, onKelasChange: (Stri
             modifier = Modifier.fillMaxWidth()
         )
         OutlinedTextField(
-            value = nim,
+            value = kategori,
             onValueChange = {
-                onNimChange(it)
+                onKategoriChange(it)
             },
-            label = { Text(text = stringResource(R.string.nim)) },
+            label = { Text(text = stringResource(R.string.kategori)) },
             keyboardOptions = KeyboardOptions(
                 capitalization = KeyboardCapitalization.Sentences,
             ),
