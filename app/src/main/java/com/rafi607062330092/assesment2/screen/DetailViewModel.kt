@@ -8,11 +8,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class DetailViewModel(private val dao: ResepDao) : ViewModel() {
-    fun insert(nama: String, nim: String, kelas: String) {
+    fun insert(judul: String, kategori: String, bahan: ArrayList<String>, langkah: ArrayList<String>, tanggal: String) {
         val resep = Resep(
-            nama    = nama,
-            nim     = nim,
-            kelas   = kelas
+            judul       = judul,
+            kategori    = kategori,
+            bahan       = bahan,
+            langkah     = langkah,
+            tanggal     = tanggal
         )
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -20,12 +22,14 @@ class DetailViewModel(private val dao: ResepDao) : ViewModel() {
         }
     }
 
-    fun update(id: Long, nama: String, nim: String, kelas: String) {
+    fun update(id: Long, judul: String, kategori: String, bahan: ArrayList<String>, langkah: ArrayList<String>, tanggal: String) {
         val resep = Resep(
             id      = id,
-            nama    = nama,
-            nim     = nim,
-            kelas   = kelas
+            judul       = judul,
+            kategori    = kategori,
+            bahan       = bahan,
+            langkah     = langkah,
+            tanggal     = tanggal
         )
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -39,7 +43,7 @@ class DetailViewModel(private val dao: ResepDao) : ViewModel() {
         }
     }
 
-    suspend fun getMahasiswa(id: Long): Resep? {
+    suspend fun getResep(id: Long): Resep? {
         return dao.getResepById(id)
     }
 }

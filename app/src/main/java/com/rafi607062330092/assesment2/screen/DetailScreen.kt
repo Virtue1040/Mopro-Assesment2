@@ -48,8 +48,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.rafi607062330092.assesment2.R
 import com.rafi607062330092.assesment2.database.ResepDb
-import com.rafi607062330092.assesment2.ui.theme.Mobpro1Theme
-import com.rafi607062330092.assesment2.util.VIewModelFactory
+import com.rafi607062330092.assesment2.util.ViewModelFactory
 
 const val KEY_ID_RESEP = "idResep"
 
@@ -58,7 +57,7 @@ const val KEY_ID_RESEP = "idResep"
 fun DetailScreen(navController: NavController, id: Long? = null) {
     val context = LocalContext.current
     val db = ResepDb.getInstance(context)
-    val factory = VIewModelFactory(db.dao)
+    val factory = ViewModelFactory(db.dao)
     val viewModel: DetailViewModel = viewModel(factory = factory)
 
     var nama by remember { mutableStateOf("") }
@@ -68,7 +67,7 @@ fun DetailScreen(navController: NavController, id: Long? = null) {
 
     LaunchedEffect(true) {
         if (id == null) { return@LaunchedEffect }
-        val data = viewModel.getMahasiswa(id) ?: return@LaunchedEffect
+        val data = viewModel.getResep(id) ?: return@LaunchedEffect
         nama = data.nama
         nim = data.nim
         kelas = data.kelas

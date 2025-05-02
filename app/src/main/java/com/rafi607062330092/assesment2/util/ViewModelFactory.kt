@@ -1,12 +1,12 @@
-package com.rafi0092.mobpro1.util
+package com.rafi607062330092.assesment2.util
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.rafi0092.mobpro1.database.MahasiswaDao
-import com.rafi0092.mobpro1.screen.DetailViewModel
-import com.rafi0092.mobpro1.screen.MainViewModel
+import com.rafi607062330092.assesment2.database.ResepDao
+import com.rafi607062330092.assesment2.screen.DetailViewModel
+import com.rafi607062330092.assesment2.screen.MainViewModel
 
-class VIewModelFactory(private val dao: MahasiswaDao) : ViewModelProvider.Factory {
+class ViewModelFactory(private val dao: ResepDao) : ViewModelProvider.Factory {
     @Suppress("unchecked_cast")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(MainViewModel::class.java)) {
