@@ -48,6 +48,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.rafi607062330092.assesment2.R
 import com.rafi607062330092.assesment2.database.ResepDb
+import com.rafi607062330092.assesment2.ui.theme.Assesment2Theme
 import com.rafi607062330092.assesment2.util.ViewModelFactory
 
 const val KEY_ID_RESEP = "idResep"
@@ -73,7 +74,6 @@ fun DetailScreen(navController: NavController, id: Long? = null) {
         kelas = data.kelas
     }
 
-
     Scaffold(
         topBar = {
             TopAppBar(
@@ -81,13 +81,13 @@ fun DetailScreen(navController: NavController, id: Long? = null) {
                     if (id == null) {
                         Text(
                             text = stringResource(
-                                id = R.string.tambah_catatan
+                                id = R.string.tambah_resep
                             )
                         )
                     } else {
                         Text(
                             text = stringResource(
-                                id = R.string.edit_catatan
+                                id = R.string.edit_resep
                             )
                         )
                     }
@@ -267,7 +267,7 @@ fun KelasOption(label: String, isSelected: Boolean, modifier: Modifier) {
 @Preview(showBackground = true)
 @Composable
 fun DetailScreenPreview() {
-    Mobpro1Theme {
+    Assesment2Theme {
         DetailScreen(rememberNavController())
     }
 }

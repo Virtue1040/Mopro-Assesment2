@@ -1,4 +1,4 @@
-package com.rafi0092.mobpro1.screen
+package com.rafi607062330092.assesment2.screen
 
 import android.content.res.Configuration
 import androidx.compose.material3.Text
@@ -8,7 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.rafi607062330092.assesment2.R
-import com.rafi607062330092.assesment2.ui.theme.Mobpro1Theme
+import com.rafi607062330092.assesment2.ui.theme.Assesment2Theme
 
 @Composable
 fun DisplayAlertDialog(
@@ -49,7 +49,7 @@ fun DisplayAlertDialog(
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
 @Composable
 fun DialogPreview() {
-    Mobpro1Theme {
+    Assesment2Theme {
         DisplayAlertDialog(
             onDismissRequest = {},
             onConfirmation = {}
