@@ -13,7 +13,7 @@ import java.util.Locale
 class DetailViewModel(private val dao: ResepDao) : ViewModel() {
     private val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US)
 
-    fun insert(judul: String, kategori: String, bahan: List<String>, langkah: List<String>) {
+    fun insert(judul: String, kategori: String, bahan: List<String>, langkah: String) {
         val resep = Resep(
             judul = judul,
             kategori = kategori,
@@ -27,7 +27,7 @@ class DetailViewModel(private val dao: ResepDao) : ViewModel() {
         }
     }
 
-    fun update(id: Long, judul: String, kategori: String, bahan: List<String>, langkah: List<String>) {
+    fun update(id: Long, judul: String, kategori: String, bahan: List<String>, langkah: String) {
         val resep = Resep(
             id = id,
             judul = judul,

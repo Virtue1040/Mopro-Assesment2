@@ -9,8 +9,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Card
@@ -48,7 +50,7 @@ import com.rafi607062330092.assesment2.navigation.Screen
 import com.rafi607062330092.assesment2.navigation.SetupNavGraph
 import com.rafi607062330092.assesment2.ui.theme.Assesment2Theme
 import com.rafi607062330092.assesment2.util.SettingsDataStore
-import com.rafi607062330092.assesment2.util.VIewModelFactory
+import com.rafi607062330092.assesment2.util.ViewModelFactory
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -105,7 +107,7 @@ fun MainScreen(navController: NavHostController) {
             ) {
                 Icon(
                     imageVector = Icons.Filled.Add,
-                    contentDescription = stringResource(R.string.tambah_catatan),
+                    contentDescription = stringResource(R.string.tambah_resep),
                     tint = MaterialTheme.colorScheme.primary
                 )
             }
@@ -127,18 +129,18 @@ fun GridItem(resep: Resep, onClick: () -> Unit) {
         border = BorderStroke(1.dp, DividerDefaults.color),
     ) {
         Text(
-            text = resep.nama,
+            text = resep.judul,
             maxLines = 2,
             overflow = TextOverflow.Ellipsis,
             fontWeight = FontWeight.Bold
         )
         Text(
-            text = resep.nim,
+            text = resep.kategori,
             maxLines = 4,
             overflow = TextOverflow.Ellipsis
         )
         Text(
-            text = resep.kelas
+            text = resep.tanggal
         )
     }
 }
@@ -150,17 +152,17 @@ fun ListItem(resep: Resep, onClick: () -> Unit) {
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         Text(
-            text = resep.nama,
+            text = resep.judul,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
             fontWeight = FontWeight.Bold
         )
         Text(
-            text = resep.nim,
+            text = resep.kategori,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
         )
-        Text(text = resep.kelas)
+        Text(text = resep.tanggal)
     }
 }
 
@@ -168,7 +170,7 @@ fun ListItem(resep: Resep, onClick: () -> Unit) {
 fun ScreenContent(showList: Boolean, modifier: Modifier, navController: NavHostController) {
     val context = LocalContext.current
     val db = ResepDb.getInstance(context)
-    val factory = VIewModelFactory(db.dao)
+    val factory = ViewModelFactory(db.dao)
     val viewModel: MainViewModel = viewModel(factory = factory)
     val data by viewModel.data.collectAsState()
 

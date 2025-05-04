@@ -10,6 +10,6 @@ data class Resep(
     val judul: String,
     val kategori: String,
     val bahan: List<String>,
-    val langkah: List<String>,
+    val langkah: String,
     val tanggal: String
 )

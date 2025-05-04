@@ -1,28 +1,35 @@
 package com.rafi607062330092.assesment2.screen
 
+import android.content.Context
 import android.widget.Toast
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.selection.selectable
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -30,15 +37,14 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.tooling.preview.Preview
@@ -64,7 +70,7 @@ fun DetailScreen(navController: NavController, id: Long? = null) {
     var judul by remember { mutableStateOf("") }
     var kategori by remember { mutableStateOf("") }
     var bahan by remember { mutableStateOf(listOf<String>()) }
-    var langkah by remember { mutableStateOf(listOf<String>()) }
+    var langkah by remember { mutableStateOf("") }
     var tanggal by remember { mutableStateOf("") }
     var showDialog by remember { mutableStateOf(false) }
 
@@ -103,7 +109,7 @@ fun DetailScreen(navController: NavController, id: Long? = null) {
                 actions = {
                     IconButton(
                         onClick = {
-                            if (judul == "" || kategori == "" || bahan.isEmpty() || langkah.isEmpty()) {
+                            if (judul.isBlank() || kategori.isBlank() || bahan.isEmpty() || langkah.isBlank()) {
                                 Toast.makeText(context, R.string.invalid, Toast.LENGTH_LONG).show()
                                 return@IconButton
                             }
@@ -148,21 +154,21 @@ fun DetailScreen(navController: NavController, id: Long? = null) {
             kategori = kategori,
             bahan = bahan,
             langkah = langkah,
-            tanggal = tanggal,
             onJudulChange = {
                 judul = it
             },
             onKategoriChange = {
                 kategori = it
             },
-            onBahanChange = {
-                bahan = it.split(",")
+            onBahanChange = { it ->
+                bahan = if (it.isBlank()) {
+                    listOf()
+                } else {
+                    it.split(",").map { it.trim() }
+                }
             },
             onLangkahChange = {
-                langkah = it.split(",")
-            },
-            onTanggalChange = {
-                tanggal = it
+                langkah = it
             },
             modifier = Modifier.padding(padding),
 
@@ -215,10 +221,9 @@ fun DeleteAction(delete: () -> Unit) {
 }
 
 @Composable
-fun FormResep(judul: String, kategori: String, bahan: List<String>, langkah: List<String>, tanggal: String,
+fun FormResep(judul: String, kategori: String, bahan: List<String>, langkah: String,
               onJudulChange: (String) -> Unit, onKategoriChange: (String) -> Unit,
               onBahanChange: (String) -> Unit, onLangkahChange: (String) -> Unit,
-              onTanggalChange: (String) -> Unit,
               modifier: Modifier) {
     Column(
         modifier = modifier.fillMaxSize().padding(16.dp),
@@ -243,47 +248,154 @@ fun FormResep(judul: String, kategori: String, bahan: List<String>, langkah: Lis
                 onKategoriChange(it)
             },
             label = { Text(text = stringResource(R.string.kategori)) },
+            singleLine = true,
             keyboardOptions = KeyboardOptions(
-                capitalization = KeyboardCapitalization.Sentences,
+                capitalization = KeyboardCapitalization.Words,
+                imeAction = ImeAction.Next
             ),
             modifier = Modifier.fillMaxWidth()
         )
 
-        Column(
-            modifier = Modifier.fillMaxWidth().border(1.dp, Color.Gray, RoundedCornerShape(4.dp))
+        Bahanlist(bahan, onBahanChange)
+
+        OutlinedTextField(
+            value = langkah,
+            onValueChange = {
+                onLangkahChange(it)
+            },
+            label = { Text(text = stringResource(R.string.langkah)) },
+            keyboardOptions = KeyboardOptions(
+                capitalization = KeyboardCapitalization.Sentences,
+            ),
+            modifier = Modifier.fillMaxSize()
+        )
+    }
+}
+
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+fun Bahanlist(bahan: List<String>, onBahanChange: (String) -> Unit) {
+    val context = LocalContext.current
+    val bahanList = remember { mutableStateListOf<String>() }
+    var newBahan by remember { mutableStateOf("") }
+
+    if (bahan.isNotEmpty()) {
+        bahanList.clear()
+        bahanList.addAll(bahan)
+    }
+
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        OutlinedTextField(
+            value = newBahan,
+            onValueChange = {
+                newBahan = it
+            },
+            label = { Text(text = stringResource(R.string.bahan)) },
+            singleLine = true,
+            modifier = Modifier.weight(1f),
+            keyboardOptions = KeyboardOptions(
+                capitalization = KeyboardCapitalization.Words,
+                imeAction = ImeAction.Done,
+
+            ),
+            keyboardActions = KeyboardActions(
+                onDone = {
+                    if (tambahBahan(context, bahanList, newBahan)) {
+                        newBahan = ""
+                        onBahanChange(bahanList.joinToString(","))
+                    }
+                }
+            )
+        )
+
+        Spacer(modifier = Modifier.width(8.dp))
+
+        IconButton(
+            onClick = {
+                if (tambahBahan(context, bahanList, newBahan)) {
+                    newBahan = ""
+                    onBahanChange(bahanList.joinToString(","))
+                }
+            },
+            modifier = Modifier.size(56.dp)
         ) {
-            items.forEach { item ->
-                KelasOption(
-                    item,
-                    kelas == item,
-                    modifier = Modifier.selectable(
-                        selected = kelas == item ,
-                        onClick = { onKelasChange(item) },
-                        role = Role.RadioButton
-                    ).padding(16.dp).fillMaxWidth()
-                )
+            Icon(Icons.Default.Add, contentDescription = "Add")
+        }
+    }
+
+    if (bahanList.isNotEmpty()) {
+        Column {
+            Text(
+                text = stringResource(R.string.bahan),
+                style = MaterialTheme.typography.titleSmall,
+                modifier = Modifier.padding(vertical = 8.dp)
+            )
+
+            FlowRow(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                bahanList.forEach { bahans ->
+                    FilterChip(
+                        selected = true,
+                        onClick = {
+                            bahanList.remove(bahans)
+                            if (bahanList.isEmpty()) {
+                                onBahanChange("")
+                            } else {
+                                onBahanChange(bahanList.joinToString(","))
+                            }
+                        },
+                        label = { Text(bahans) },
+                        trailingIcon = {
+                            Icon(
+                                Icons.Default.Close,
+                                contentDescription = stringResource(R.string.hapus_bahan),
+                                modifier = Modifier.size(18.dp)
+                            )
+                        },
+                        colors = FilterChipDefaults.filterChipColors(
+                            selectedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
+                            selectedLabelColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                            selectedLeadingIconColor = MaterialTheme.colorScheme.onSecondaryContainer
+                        )
+                    )
+                }
             }
+        }
+    } else {
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Text(
+                text = stringResource(R.string.bahan_masih_kosong),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.error,
+                modifier = Modifier.padding(vertical = 8.dp)
+            )
         }
     }
 }
 
-@Composable
-fun KelasOption(label: String, isSelected: Boolean, modifier: Modifier) {
-    Row(
-        modifier = modifier,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        RadioButton(
-            selected = isSelected, onClick = null
-        )
-        Text(
-            text = label,
-            style = MaterialTheme.typography.bodyLarge,
-            modifier = Modifier.padding(start = 8.dp)
-        )
+private fun tambahBahan(context: Context, list: MutableList<String>, item: String): Boolean {
+    if (item.isBlank()) {
+        Toast.makeText(context, R.string.bahan_kosong, Toast.LENGTH_LONG).show()
+        return false
+    } else if (item.length < 3) {
+        Toast.makeText(context, R.string.bahan_min3, Toast.LENGTH_LONG).show()
+        return false
     }
-}
 
+    if (list.contains(item)) {
+        Toast.makeText(context, R.string.bahan_sudah_ada, Toast.LENGTH_LONG).show()
+        return false
+    }
+
+    list.add(item)
+    return true
+}
 
 @Preview(showBackground = true)
 @Composable

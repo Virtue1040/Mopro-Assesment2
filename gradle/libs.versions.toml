@@ -1,5 +1,6 @@
 [versions]
 agp = "8.8.1"
+gson = "2.8.8"
 kotlin = "2.0.21"
 devtoolsKsp = "2.0.0-1.0.24"
 coreKtx = "1.15.0"
@@ -19,6 +20,7 @@ androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-
 androidx-room-compiler = { group = "androidx.room", name="room-compiler", version.ref ="roomRuntime"}
 androidx-room-ktx = { group = "androidx.room", name="room-ktx", version.ref = "roomRuntime" }
 androidx-room-runtime = { group = "androidx.room", name="room-runtime", version.ref = "roomRuntime" }
+gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }

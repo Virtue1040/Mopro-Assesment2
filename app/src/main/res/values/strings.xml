@@ -13,7 +13,13 @@
     <string name="kembali">Kembali</string>
     <string name="simpan">Simpan</string>
     <string name="edit_resep">Ubah Resep</string>
-    <string name="invalid">Judul dan Isi Resep tidak boleh kosong.</string>
+    <string name="tambah_bahan">Tambah Bahan Baru</string>
+    <string name="hapus_bahan">Hapus Bahan</string>
+    <string name="bahan_kosong">Bahan tidak boleh kosong</string>
+    <string name="bahan_min3">Bahan minimal 3 karakter</string>
+    <string name="bahan_sudah_ada">Bahan sudah ada</string>
+    <string name="invalid">Judul, Kategori, Bahan, atau Langkah-langkah tidak boleh kosong.</string>
+    <string name="bahan_masih_kosong">Bahan masih kosong</string>
     <string name="lainnya">Opsi lainnya</string>
     <string name="hapus">Hapus Resep</string>
     <string name="pesan_hapus">Hapus Resep ini?</string>
