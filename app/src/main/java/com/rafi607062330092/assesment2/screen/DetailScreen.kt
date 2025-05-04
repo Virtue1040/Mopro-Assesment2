@@ -175,19 +175,30 @@ fun Action(edit: () -> Unit, delete: () -> Unit) {
 }
 
 @Composable
-fun Header(
+fun Detail(
     title: String,
+    value: @Composable () -> Unit
 ) {
     Column(
-        modifier = Modifier.fillMaxWidth().background(
-            MaterialTheme.colorScheme.primaryContainer,
-            shape = MaterialTheme.shapes.small
-        ).padding(8.dp)
+        modifier = Modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        Text(
-            text = title,
-            color = MaterialTheme.colorScheme.primary
-        )
+        Column(
+            modifier = Modifier.fillMaxWidth().background(
+                MaterialTheme.colorScheme.primaryContainer,
+                shape = MaterialTheme.shapes.small
+            ).padding(8.dp)
+        ) {
+            Text(
+                text = title,
+                color = MaterialTheme.colorScheme.primary
+            )
+        }
+        Column(
+            modifier = Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp),
+        ) {
+            value()
+        }
     }
 }
 
@@ -221,66 +232,68 @@ fun FormResep(
         contentPadding = PaddingValues(bottom = 84.dp)
     ) {
         item {
-            Header(
-                title = stringResource(R.string.judul) + " " + stringResource(R.string.resep)
+            Detail(
+                title = stringResource(R.string.judul) + " " + stringResource(R.string.resep),
+                value = {
+                    Text(
+                        text = judul,
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                }
+            )
+        }
+
+        item {
+            Detail(
+                title = stringResource(R.string.kategori),
+                value = {
+                    Text(
+                        text = kategori,
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                }
             )
         }
         item {
-            Text(
-                text = judul,
-                style = MaterialTheme.typography.titleMedium
-            )
-        }
-        item {
-            Header(
-                title = stringResource(R.string.kategori)
-            )
-        }
-        item {
-            Text(
-                text = kategori,
-                style = MaterialTheme.typography.titleMedium
-            )
-        }
-        item {
-            Header(
-                title = stringResource(R.string.tanggal)
-            )
-        }
-        item {
-            Text(
-                text = tanggal,
-                style = MaterialTheme.typography.titleMedium
+            Detail(
+                title = stringResource(R.string.tanggal),
+                value = {
+                    Text(
+                        text = tanggal,
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                }
             )
         }
         item {
             HorizontalDivider()
         }
         item {
-            Header(
-                title = stringResource(R.string.bahan)
-            )
-        }
-        item {
-            FlowRow(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-            ) {
-                bahan.forEach { item ->
-                    BahanChip(item)
+            Detail(
+                title = stringResource(R.string.bahan),
+                value = {
+                    FlowRow(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    ) {
+                        bahan.forEach { item ->
+                            BahanChip(item)
+                        }
+                    }
                 }
-            }
-        }
-        item {
-            Header(
-                title = stringResource(R.string.langkah)
             )
         }
         item {
-            Text(
-                text = langkah,
-                style = MaterialTheme.typography.titleMedium
+            Detail(
+                title = stringResource(R.string.langkah),
+                value = {
+                    Text(
+                        text = langkah,
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                }
             )
         }
     }
 }
+

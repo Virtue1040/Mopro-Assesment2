@@ -8,7 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.rafi607062330092.assesment2.R
-import com.rafi607062330092.assesment2.ui.theme.Assesment2Theme
+import com.rafi607062330092.assesment2.ui.theme.ThemeController
 
 @Composable
 fun DisplayAlertDialog(
@@ -49,7 +49,7 @@ fun DisplayAlertDialog(
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
 @Composable
 fun DialogPreview() {
-    Assesment2Theme {
+    ThemeController {
         DisplayAlertDialog(
             onDismissRequest = {},
             onConfirmation = {}

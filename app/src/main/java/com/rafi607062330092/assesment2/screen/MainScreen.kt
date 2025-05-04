@@ -49,7 +49,7 @@ import com.rafi607062330092.assesment2.database.ResepDb
 import com.rafi607062330092.assesment2.model.Resep
 import com.rafi607062330092.assesment2.navigation.Screen
 import com.rafi607062330092.assesment2.navigation.SetupNavGraph
-import com.rafi607062330092.assesment2.ui.theme.Assesment2Theme
+import com.rafi607062330092.assesment2.ui.theme.ThemeController
 import com.rafi607062330092.assesment2.util.SettingsDataStore
 import com.rafi607062330092.assesment2.util.ViewModelFactory
 import kotlinx.coroutines.CoroutineScope
@@ -61,6 +61,7 @@ import kotlinx.coroutines.launch
 fun MainScreen(navController: NavHostController) {
     val dataStore = SettingsDataStore(LocalContext.current)
     val showList by dataStore.layoutFlow.collectAsState(true)
+    val theme by dataStore.themeFlow.collectAsState(true)
 
     Scaffold(
         topBar = {
@@ -93,6 +94,23 @@ fun MainScreen(navController: NavHostController) {
                             contentDescription = stringResource(
                                 if (showList) R.string.grid
                                 else R.string.list
+                            ),
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                    }
+                    IconButton(
+                        onClick = {
+                            CoroutineScope(Dispatchers.IO).launch {
+                                dataStore.saveTheme(!theme)
+                            }
+                        }
+                    ) {
+                        Icon(
+                            painter = painterResource(
+                                R.drawable.baseline_color_lens_24
+                            ),
+                            contentDescription = stringResource(
+                                R.string.ubah_tema
                             ),
                             tint = MaterialTheme.colorScheme.primary
                         )
@@ -252,7 +270,7 @@ fun ScreenContent(showList: Boolean, modifier: Modifier, navController: NavHostC
 @Preview(showBackground = true)
 @Composable
 fun MainPreview() {
-    Assesment2Theme {
+    ThemeController {
         SetupNavGraph(rememberNavController())
     }
 }

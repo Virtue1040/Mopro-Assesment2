@@ -1,4 +1,4 @@
-package com.rafi607062330092.assesment2.ui.theme
+package com.rafi607062330092.assesment2.ui.theme.normal
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

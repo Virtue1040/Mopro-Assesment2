@@ -2,8 +2,6 @@ package com.rafi607062330092.assesment2.screen
 
 import android.content.Context
 import android.widget.Toast
-import androidx.compose.foundation.gestures.rememberScrollableState
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -25,9 +23,6 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
@@ -59,7 +54,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.rafi607062330092.assesment2.R
 import com.rafi607062330092.assesment2.database.ResepDb
-import com.rafi607062330092.assesment2.ui.theme.Assesment2Theme
+import com.rafi607062330092.assesment2.ui.theme.ThemeController
 import com.rafi607062330092.assesment2.util.ViewModelFactory
 
 const val KEY_ID_RESEP = "idResep"
@@ -370,7 +365,7 @@ private fun tambahBahan(context: Context, list: MutableList<String>, item: Strin
 @Preview(showBackground = true)
 @Composable
 fun EditScreenPreview() {
-    Assesment2Theme {
+    ThemeController {
         EditScreen(rememberNavController())
     }
 }

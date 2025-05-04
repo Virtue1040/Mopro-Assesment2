@@ -26,6 +26,7 @@
     <string name="ubah_resep">Ubah Resep</string>
     <string name="hapus">Hapus Resep</string>
     <string name="pesan_hapus">Hapus Resep ini?</string>
+    <string name="ubah_tema">Ubah tema</string>
     <string name="tombol_hapus">Hapus</string>
     <string name="tombol_batal">Batal</string>
     <string name="list">Tampilan list</string>
