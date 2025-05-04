@@ -128,20 +128,25 @@ fun GridItem(resep: Resep, onClick: () -> Unit) {
         ),
         border = BorderStroke(1.dp, DividerDefaults.color),
     ) {
-        Text(
-            text = resep.judul,
-            maxLines = 2,
-            overflow = TextOverflow.Ellipsis,
-            fontWeight = FontWeight.Bold
-        )
-        Text(
-            text = resep.kategori,
-            maxLines = 4,
-            overflow = TextOverflow.Ellipsis
-        )
-        Text(
-            text = resep.tanggal
-        )
+        Column(
+            modifier = Modifier.padding(8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Text(
+                text = resep.judul,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis,
+                fontWeight = FontWeight.Bold
+            )
+            Text(
+                text = resep.kategori,
+                maxLines = 4,
+                overflow = TextOverflow.Ellipsis
+            )
+            Text(
+                text = resep.tanggal
+            )
+        }
     }
 }
 
