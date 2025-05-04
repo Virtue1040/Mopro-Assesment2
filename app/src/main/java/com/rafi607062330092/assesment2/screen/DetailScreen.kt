@@ -204,16 +204,17 @@ fun Detail(
 
 @Composable
 fun BahanChip(title: String) {
-    FilterChip(
-        selected = true,
-        onClick = {},
-        label = { Text(title) },
-        colors = FilterChipDefaults.filterChipColors(
-            selectedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
-            selectedLabelColor = MaterialTheme.colorScheme.onSecondaryContainer,
-            selectedLeadingIconColor = MaterialTheme.colorScheme.onSecondaryContainer
+    Column(
+        modifier = Modifier.background(
+            MaterialTheme.colorScheme.secondaryContainer,
+            shape = MaterialTheme.shapes.small
+        ).padding(8.dp),
+    ) {
+        Text(
+            text = title,
+
         )
-    )
+    }
 }
 
 @OptIn(ExperimentalLayoutApi::class)
@@ -274,7 +275,8 @@ fun FormResep(
                 value = {
                     FlowRow(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        horizontalArrangement = Arrangement.spacedBy(10.dp),
+                        verticalArrangement = Arrangement.spacedBy(10.dp)
                     ) {
                         bahan.forEach { item ->
                             BahanChip(item)
