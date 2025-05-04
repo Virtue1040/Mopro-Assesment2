@@ -1,35 +1,27 @@
 package com.rafi607062330092.assesment2.screen
 
-import android.content.Context
-import android.widget.Toast
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -37,27 +29,19 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardCapitalization
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.rafi607062330092.assesment2.R
 import com.rafi607062330092.assesment2.database.ResepDb
-import com.rafi607062330092.assesment2.ui.theme.Assesment2Theme
+import com.rafi607062330092.assesment2.navigation.Screen
 import com.rafi607062330092.assesment2.util.ViewModelFactory
-
-const val KEY_ID_RESEP = "idResep"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -88,49 +72,24 @@ fun DetailScreen(navController: NavController, id: Long? = null) {
         topBar = {
             TopAppBar(
                 title = {
-                    if (id == null) {
-                        Text(
-                            text = stringResource(
-                                id = R.string.tambah_resep
-                            )
-                        )
-                    } else {
-                        Text(
-                            text = stringResource(
-                                id = R.string.edit_resep
-                            )
-                        )
-                    }
+                    Text(
+                        text = stringResource(R.string.resep) + " " + judul,
+                    )
                 },
                 colors = TopAppBarDefaults.mediumTopAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
                     titleContentColor = MaterialTheme.colorScheme.primary
                 ),
                 actions = {
-                    IconButton(
-                        onClick = {
-                            if (judul.isBlank() || kategori.isBlank() || bahan.isEmpty() || langkah.isBlank()) {
-                                Toast.makeText(context, R.string.invalid, Toast.LENGTH_LONG).show()
-                                return@IconButton
-                            }
-                            if (id == null) {
-                                viewModel.insert(judul, kategori, bahan, langkah)
-                            } else {
-                                viewModel.update(id, judul, kategori, bahan, langkah)
-                            }
-                            navController.popBackStack()
-                        }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Filled.Check,
-                            contentDescription = stringResource(R.string.simpan),
-                            tint = MaterialTheme.colorScheme.primary
-                        )
-                    }
                     if (id != null) {
-                        DeleteAction {
-                            showDialog = true
-                        }
+                        Action(
+                            edit = {
+                                navController.navigate(Screen.FormUbah.withId(id))
+                            },
+                            delete = {
+                                showDialog = true
+                            }
+                        )
                     }
                 },
                 navigationIcon = {
@@ -154,24 +113,8 @@ fun DetailScreen(navController: NavController, id: Long? = null) {
             kategori = kategori,
             bahan = bahan,
             langkah = langkah,
-            onJudulChange = {
-                judul = it
-            },
-            onKategoriChange = {
-                kategori = it
-            },
-            onBahanChange = { it ->
-                bahan = if (it.isBlank()) {
-                    listOf()
-                } else {
-                    it.split(",").map { it.trim() }
-                }
-            },
-            onLangkahChange = {
-                langkah = it
-            },
-            modifier = Modifier.padding(padding),
-
+            tanggal = tanggal,
+            modifier = Modifier.padding(padding)
         )
 
         if (id != null && showDialog) {
@@ -189,7 +132,7 @@ fun DetailScreen(navController: NavController, id: Long? = null) {
 }
 
 @Composable
-fun DeleteAction(delete: () -> Unit) {
+fun Action(edit: () -> Unit, delete: () -> Unit) {
     var expanded by remember { mutableStateOf(false) }
     IconButton(onClick = {
         expanded = true
@@ -208,6 +151,17 @@ fun DeleteAction(delete: () -> Unit) {
             DropdownMenuItem(
                 text = {
                     Text(
+                        text = stringResource(id = R.string.ubah_resep)
+                    )
+                },
+                onClick = {
+                    expanded = false
+                    edit()
+                }
+            )
+            DropdownMenuItem(
+                text = {
+                    Text(
                         text = stringResource(id = R.string.hapus)
                     )
                 },
@@ -221,186 +175,112 @@ fun DeleteAction(delete: () -> Unit) {
 }
 
 @Composable
-fun FormResep(judul: String, kategori: String, bahan: List<String>, langkah: String,
-              onJudulChange: (String) -> Unit, onKategoriChange: (String) -> Unit,
-              onBahanChange: (String) -> Unit, onLangkahChange: (String) -> Unit,
-              modifier: Modifier) {
+fun Header(
+    title: String,
+) {
     Column(
-        modifier = modifier.fillMaxSize().padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        modifier = Modifier.fillMaxWidth().background(
+            MaterialTheme.colorScheme.primaryContainer,
+            shape = MaterialTheme.shapes.small
+        ).padding(8.dp)
     ) {
-        OutlinedTextField(
-            value = judul,
-            onValueChange = {
-                onJudulChange(it)
-            },
-            label = { Text(text = stringResource(R.string.judul))  },
-            singleLine = true,
-            keyboardOptions = KeyboardOptions(
-                capitalization = KeyboardCapitalization.Words,
-                imeAction = ImeAction.Next
-            ),
-            modifier = Modifier.fillMaxWidth()
-        )
-        OutlinedTextField(
-            value = kategori,
-            onValueChange = {
-                onKategoriChange(it)
-            },
-            label = { Text(text = stringResource(R.string.kategori)) },
-            singleLine = true,
-            keyboardOptions = KeyboardOptions(
-                capitalization = KeyboardCapitalization.Words,
-                imeAction = ImeAction.Next
-            ),
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        Bahanlist(bahan, onBahanChange)
-
-        OutlinedTextField(
-            value = langkah,
-            onValueChange = {
-                onLangkahChange(it)
-            },
-            label = { Text(text = stringResource(R.string.langkah)) },
-            keyboardOptions = KeyboardOptions(
-                capitalization = KeyboardCapitalization.Sentences,
-            ),
-            modifier = Modifier.fillMaxSize()
+        Text(
+            text = title,
+            color = MaterialTheme.colorScheme.primary
         )
     }
+}
+
+@Composable
+fun BahanChip(title: String) {
+    FilterChip(
+        selected = true,
+        onClick = {},
+        label = { Text(title) },
+        colors = FilterChipDefaults.filterChipColors(
+            selectedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
+            selectedLabelColor = MaterialTheme.colorScheme.onSecondaryContainer,
+            selectedLeadingIconColor = MaterialTheme.colorScheme.onSecondaryContainer
+        )
+    )
 }
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun Bahanlist(bahan: List<String>, onBahanChange: (String) -> Unit) {
-    val context = LocalContext.current
-    val bahanList = remember { mutableStateListOf<String>() }
-    var newBahan by remember { mutableStateOf("") }
-
-    if (bahan.isNotEmpty()) {
-        bahanList.clear()
-        bahanList.addAll(bahan)
-    }
-
-    Row(verticalAlignment = Alignment.CenterVertically) {
-        OutlinedTextField(
-            value = newBahan,
-            onValueChange = {
-                newBahan = it
-            },
-            label = { Text(text = stringResource(R.string.bahan)) },
-            singleLine = true,
-            modifier = Modifier.weight(1f),
-            keyboardOptions = KeyboardOptions(
-                capitalization = KeyboardCapitalization.Words,
-                imeAction = ImeAction.Done,
-
-            ),
-            keyboardActions = KeyboardActions(
-                onDone = {
-                    if (tambahBahan(context, bahanList, newBahan)) {
-                        newBahan = ""
-                        onBahanChange(bahanList.joinToString(","))
-                    }
-                }
+fun FormResep(
+    judul: String,
+    kategori: String,
+    bahan: List<String>,
+    langkah: String,
+    tanggal: String,
+    modifier: Modifier
+) {
+    LazyColumn(
+        modifier = modifier.fillMaxSize().padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        contentPadding = PaddingValues(bottom = 84.dp)
+    ) {
+        item {
+            Header(
+                title = stringResource(R.string.judul) + " " + stringResource(R.string.resep)
             )
-        )
-
-        Spacer(modifier = Modifier.width(8.dp))
-
-        IconButton(
-            onClick = {
-                if (tambahBahan(context, bahanList, newBahan)) {
-                    newBahan = ""
-                    onBahanChange(bahanList.joinToString(","))
-                }
-            },
-            modifier = Modifier.size(56.dp)
-        ) {
-            Icon(Icons.Default.Add, contentDescription = "Add")
         }
-    }
-
-    if (bahanList.isNotEmpty()) {
-        Column {
+        item {
             Text(
-                text = stringResource(R.string.bahan),
-                style = MaterialTheme.typography.titleSmall,
-                modifier = Modifier.padding(vertical = 8.dp)
+                text = judul,
+                style = MaterialTheme.typography.titleMedium
             )
-
+        }
+        item {
+            Header(
+                title = stringResource(R.string.kategori)
+            )
+        }
+        item {
+            Text(
+                text = kategori,
+                style = MaterialTheme.typography.titleMedium
+            )
+        }
+        item {
+            Header(
+                title = stringResource(R.string.tanggal)
+            )
+        }
+        item {
+            Text(
+                text = tanggal,
+                style = MaterialTheme.typography.titleMedium
+            )
+        }
+        item {
+            HorizontalDivider()
+        }
+        item {
+            Header(
+                title = stringResource(R.string.bahan)
+            )
+        }
+        item {
             FlowRow(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
-                bahanList.forEach { bahans ->
-                    FilterChip(
-                        selected = true,
-                        onClick = {
-                            bahanList.remove(bahans)
-                            if (bahanList.isEmpty()) {
-                                onBahanChange("")
-                            } else {
-                                onBahanChange(bahanList.joinToString(","))
-                            }
-                        },
-                        label = { Text(bahans) },
-                        trailingIcon = {
-                            Icon(
-                                Icons.Default.Close,
-                                contentDescription = stringResource(R.string.hapus_bahan),
-                                modifier = Modifier.size(18.dp)
-                            )
-                        },
-                        colors = FilterChipDefaults.filterChipColors(
-                            selectedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
-                            selectedLabelColor = MaterialTheme.colorScheme.onSecondaryContainer,
-                            selectedLeadingIconColor = MaterialTheme.colorScheme.onSecondaryContainer
-                        )
-                    )
+                bahan.forEach { item ->
+                    BahanChip(item)
                 }
             }
         }
-    } else {
-        Column(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            Text(
-                text = stringResource(R.string.bahan_masih_kosong),
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.error,
-                modifier = Modifier.padding(vertical = 8.dp)
+        item {
+            Header(
+                title = stringResource(R.string.langkah)
             )
         }
-    }
-}
-
-private fun tambahBahan(context: Context, list: MutableList<String>, item: String): Boolean {
-    if (item.isBlank()) {
-        Toast.makeText(context, R.string.bahan_kosong, Toast.LENGTH_LONG).show()
-        return false
-    } else if (item.length < 3) {
-        Toast.makeText(context, R.string.bahan_min3, Toast.LENGTH_LONG).show()
-        return false
-    }
-
-    if (list.contains(item)) {
-        Toast.makeText(context, R.string.bahan_sudah_ada, Toast.LENGTH_LONG).show()
-        return false
-    }
-
-    list.add(item)
-    return true
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DetailScreenPreview() {
-    Assesment2Theme {
-        DetailScreen(rememberNavController())
+        item {
+            Text(
+                text = langkah,
+                style = MaterialTheme.typography.titleMedium
+            )
+        }
     }
 }

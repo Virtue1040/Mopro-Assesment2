@@ -7,8 +7,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.rafi607062330092.assesment2.screen.MainScreen
 import com.rafi607062330092.assesment2.screen.DetailScreen
+import com.rafi607062330092.assesment2.screen.MainScreen
+import com.rafi607062330092.assesment2.screen.EditScreen
 import com.rafi607062330092.assesment2.screen.KEY_ID_RESEP
 
 
@@ -22,7 +23,16 @@ fun SetupNavGraph(navController: NavHostController = rememberNavController()) {
             MainScreen(navController)
         }
         composable(route = Screen.FormBaru.route) {
-            DetailScreen(navController)
+            EditScreen(navController)
+        }
+        composable(
+            route = Screen.FormDetail.route,
+            arguments = listOf(navArgument(KEY_ID_RESEP) {
+                type = NavType.LongType
+            })
+        ) { navBackStackEntry ->
+            val id = navBackStackEntry.arguments?.getLong(KEY_ID_RESEP)
+            DetailScreen(navController, id)
         }
         composable(
             route = Screen.FormUbah.route,
@@ -31,7 +41,7 @@ fun SetupNavGraph(navController: NavHostController = rememberNavController()) {
             })
         ) { navBackStackEntry ->
             val id = navBackStackEntry.arguments?.getLong(KEY_ID_RESEP)
-            DetailScreen(navController, id)
+            EditScreen(navController, id)
         }
 
     }

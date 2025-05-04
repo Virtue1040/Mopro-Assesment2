@@ -1,6 +1,7 @@
 package com.rafi607062330092.assesment2.screen
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -129,7 +130,7 @@ fun GridItem(resep: Resep, onClick: () -> Unit) {
         border = BorderStroke(1.dp, DividerDefaults.color),
     ) {
         Column(
-            modifier = Modifier.padding(8.dp),
+            modifier = Modifier.padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Text(
@@ -146,6 +147,17 @@ fun GridItem(resep: Resep, onClick: () -> Unit) {
             Text(
                 text = resep.tanggal
             )
+            Column(
+                modifier = Modifier.fillMaxWidth().background(
+                    MaterialTheme.colorScheme.primaryContainer,
+                    shape = MaterialTheme.shapes.small
+                ).padding(8.dp)
+            ) {
+                Text(
+                    text = stringResource(R.string.buka_detail),
+                    color = MaterialTheme.colorScheme.primary
+                )
+            }
         }
     }
 }
@@ -153,21 +165,38 @@ fun GridItem(resep: Resep, onClick: () -> Unit) {
 @Composable
 fun ListItem(resep: Resep, onClick: () -> Unit) {
     Column(
-        modifier = Modifier.padding(16.dp).fillMaxWidth().clickable { onClick() },
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+        modifier = Modifier.fillMaxWidth().clickable { onClick() },
     ) {
-        Text(
-            text = resep.judul,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-            fontWeight = FontWeight.Bold
-        )
-        Text(
-            text = resep.kategori,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis
-        )
-        Text(text = resep.tanggal)
+        Column(
+            modifier = Modifier.padding(16.dp).fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Text(
+                text = resep.judul,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                fontWeight = FontWeight.Bold
+            )
+            Text(
+                text = resep.kategori,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+            Text(
+                text = resep.tanggal
+            )
+            Column(
+                modifier = Modifier.fillMaxWidth().background(
+                    MaterialTheme.colorScheme.primaryContainer,
+                    shape = MaterialTheme.shapes.small
+                ).padding(8.dp)
+            ) {
+                Text(
+                    text = stringResource(R.string.buka_detail),
+                    color = MaterialTheme.colorScheme.primary
+                )
+            }
+        }
     }
 }
 
@@ -197,7 +226,7 @@ fun ScreenContent(showList: Boolean, modifier: Modifier, navController: NavHostC
             ) {
                 items(data) {
                     ListItem(resep = it) {
-                        navController.navigate(Screen.FormUbah.withId(it.id))
+                        navController.navigate(Screen.FormDetail.withId(it.id))
                     }
                     HorizontalDivider()
                 }
@@ -212,7 +241,7 @@ fun ScreenContent(showList: Boolean, modifier: Modifier, navController: NavHostC
             ) {
                 items(data) {
                     GridItem(resep = it) {
-                        navController.navigate(Screen.FormUbah.withId(it.id))
+                        navController.navigate(Screen.FormDetail.withId(it.id))
                     }
                 }
             }
