@@ -26,12 +26,17 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -48,7 +53,6 @@ import com.rafi607062330092.assesment2.R
 import com.rafi607062330092.assesment2.database.ResepDb
 import com.rafi607062330092.assesment2.model.Resep
 import com.rafi607062330092.assesment2.navigation.Screen
-import com.rafi607062330092.assesment2.navigation.SetupNavGraph
 import com.rafi607062330092.assesment2.ui.theme.ThemeController
 import com.rafi607062330092.assesment2.util.SettingsDataStore
 import com.rafi607062330092.assesment2.util.ViewModelFactory
@@ -58,12 +62,42 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen(navController: NavHostController) {
-    val dataStore = SettingsDataStore(LocalContext.current)
+fun MainScreen(navController: NavHostController, delete :Long? = null) {
+    val context = LocalContext.current
+    val db = ResepDb.getInstance(context)
+    val factory = ViewModelFactory(db.dao)
+    val viewModel: DetailViewModel = viewModel(factory = factory)
+
+    val dataStore = SettingsDataStore(context)
     val showList by dataStore.layoutFlow.collectAsState(true)
     val theme by dataStore.themeFlow.collectAsState(true)
 
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
+
+    LaunchedEffect(true) {
+        if (delete == null) { return@LaunchedEffect }
+        val data = viewModel.getResep(delete) ?: return@LaunchedEffect
+        if (data.isDelete) {
+            displaySnackbar(
+                scope = scope,
+                hostState = snackbarHostState,
+                message = context.getString(R.string.resep_recycled),
+                action = context.getString(R.string.undo),
+                onAction = {
+                    viewModel.undo(delete)
+                },
+                onDismiss = {
+                    /** onDismiss */
+                }
+            )
+        }
+    }
+
     Scaffold(
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState)
+        },
         topBar = {
             TopAppBar(
                 title = {
@@ -94,6 +128,21 @@ fun MainScreen(navController: NavHostController) {
                             contentDescription = stringResource(
                                 if (showList) R.string.grid
                                 else R.string.list
+                            ),
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                    }
+                    IconButton(
+                        onClick = {
+                            navController.navigate(Screen.Recycle.route)
+                        }
+                    ) {
+                        Icon(
+                            painter = painterResource(
+                                R.drawable.baseline_restore_from_trash_24
+                            ),
+                            contentDescription = stringResource(
+                                R.string.restore
                             ),
                             tint = MaterialTheme.colorScheme.primary
                         )
@@ -137,7 +186,7 @@ fun MainScreen(navController: NavHostController) {
 }
 
 @Composable
-fun GridItem(resep: Resep, onClick: () -> Unit) {
+private fun GridItem(resep: Resep, onClick: () -> Unit) {
     Card(
         modifier = Modifier.fillMaxWidth().clickable {
             onClick()
@@ -181,7 +230,7 @@ fun GridItem(resep: Resep, onClick: () -> Unit) {
 }
 
 @Composable
-fun ListItem(resep: Resep, onClick: () -> Unit) {
+private fun ListItem(resep: Resep, onClick: () -> Unit) {
     Column(
         modifier = Modifier.fillMaxWidth().clickable { onClick() },
     ) {
@@ -219,7 +268,7 @@ fun ListItem(resep: Resep, onClick: () -> Unit) {
 }
 
 @Composable
-fun ScreenContent(showList: Boolean, modifier: Modifier, navController: NavHostController) {
+private fun ScreenContent(showList: Boolean, modifier: Modifier, navController: NavHostController) {
     val context = LocalContext.current
     val db = ResepDb.getInstance(context)
     val factory = ViewModelFactory(db.dao)
@@ -271,6 +320,6 @@ fun ScreenContent(showList: Boolean, modifier: Modifier, navController: NavHostC
 @Composable
 fun MainPreview() {
     ThemeController {
-        SetupNavGraph(rememberNavController())
+        MainScreen(rememberNavController())
     }
 }

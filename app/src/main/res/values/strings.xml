@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Resep Maker</string>
     <string name="list_kosong">Belum ada data</string>
+    <string name="list_kosong_recycle_bin">Belum ada data untuk di restore</string>
     <string name="x_diklik">%1$s diklik!</string>
     <string name="tambah_resep">Tambah Resep</string>
     <string name="tambah_error">Belum bisa tambah Resep.</string>
@@ -22,7 +23,13 @@
     <string name="invalid">Judul, Kategori, Bahan, atau Langkah-langkah tidak boleh kosong.</string>
     <string name="bahan_masih_kosong">Bahan masih kosong</string>
     <string name="buka_detail">Click untuk lihat lebih detail</string>
+    <string name="recycle_click">Click untuk restore data</string>
     <string name="lainnya">Opsi lainnya</string>
+    <string name="undo">Undo</string>
+    <string name="restore">Restore Resep</string>
+    <string name="recycle_bin">Recycle Bin</string>
+    <string name="resep_restored">Resep telah dipulihkan</string>
+    <string name="resep_recycled">Resep telah dipindahkan ke Recycle Bin</string>
     <string name="ubah_resep">Ubah Resep</string>
     <string name="hapus">Hapus Resep</string>
     <string name="pesan_hapus">Hapus Resep ini?</string>

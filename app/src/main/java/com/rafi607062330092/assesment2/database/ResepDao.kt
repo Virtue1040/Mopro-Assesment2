@@ -16,8 +16,11 @@ interface ResepDao {
     @Update
     suspend fun update(resep: Resep)
 
-    @Query("SELECT * FROM resep ORDER BY kategori ASC")
+    @Query("SELECT * FROM resep WHERE isDelete = 0 ORDER BY kategori ASC")
     fun getResep(): Flow<List<Resep>>
+
+    @Query("SELECT * FROM resep WHERE isDelete = 1 ORDER BY kategori ASC")
+    fun getResepDeleted(): Flow<List<Resep>>
 
     @Query("SELECT DISTINCT kategori FROM resep ORDER BY kategori ASC")
     fun getCategory(): Flow<List<String>>
@@ -25,6 +28,9 @@ interface ResepDao {
     @Query("SELECT *  FROM resep WHERE id = :id")
     suspend fun getResepById(id: Long): Resep?
 
-    @Query("DELETE FROM resep WHERE id = :id")
+    @Query("UPDATE resep SET isDelete = 1 WHERE id = :id")
     suspend fun deleteById(id: Long)
+
+    @Query("UPDATE resep SET isDelete = 0 WHERE id = :id")
+    suspend fun undoById(id: Long)
 }

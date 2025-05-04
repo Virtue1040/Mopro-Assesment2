@@ -123,7 +123,7 @@ fun DetailScreen(navController: NavController, id: Long? = null) {
             ) {
                 showDialog = false
                 viewModel.delete(id)
-                navController.popBackStack()
+                navController.navigate(Screen.HomeArgument.withId(id))
             }
         }
     }

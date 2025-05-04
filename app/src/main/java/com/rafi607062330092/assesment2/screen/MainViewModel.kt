@@ -14,4 +14,9 @@ class MainViewModel(dao: ResepDao) : ViewModel() {
         started = SharingStarted.WhileSubscribed(5000L),
         initialValue = emptyList()
     )
+    val dataDeleted: StateFlow<List<Resep>> = dao.getResepDeleted().stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000L),
+        initialValue = emptyList()
+    )
 }

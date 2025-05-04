@@ -11,6 +11,7 @@ import com.rafi607062330092.assesment2.screen.DetailScreen
 import com.rafi607062330092.assesment2.screen.MainScreen
 import com.rafi607062330092.assesment2.screen.EditScreen
 import com.rafi607062330092.assesment2.screen.KEY_ID_RESEP
+import com.rafi607062330092.assesment2.screen.RecycleBinScreen
 
 
 @Composable
@@ -22,9 +23,23 @@ fun SetupNavGraph(navController: NavHostController = rememberNavController()) {
         composable(route = Screen.Home.route) {
             MainScreen(navController)
         }
+        composable(route = Screen.Recycle.route) {
+            RecycleBinScreen(navController)
+        }
+        composable(
+            route = Screen.HomeArgument.route,
+            arguments = listOf(navArgument(KEY_ID_RESEP) {
+                type = NavType.LongType
+            })
+        ) { navBackStackEntry ->
+            val delete = navBackStackEntry.arguments?.getLong(KEY_ID_RESEP)
+            MainScreen(navController, delete)
+        }
+
         composable(route = Screen.FormBaru.route) {
             EditScreen(navController)
         }
+
         composable(
             route = Screen.FormDetail.route,
             arguments = listOf(navArgument(KEY_ID_RESEP) {

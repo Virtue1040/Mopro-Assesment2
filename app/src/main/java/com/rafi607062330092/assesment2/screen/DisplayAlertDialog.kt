@@ -23,7 +23,9 @@ fun DisplayAlertDialog(
         },
         confirmButton = {
             TextButton(
-                onClick = {onConfirmation()}
+                onClick = {
+                    onConfirmation()
+                }
             ) {
                 Text(
                     text = stringResource(R.string.tombol_hapus)

@@ -11,5 +11,6 @@ data class Resep(
     val kategori: String,
     val bahan: List<String>,
     val langkah: String,
-    val tanggal: String
+    val tanggal: String,
+    val isDelete: Boolean = false
 )

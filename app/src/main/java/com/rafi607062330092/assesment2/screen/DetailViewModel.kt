@@ -48,6 +48,12 @@ class DetailViewModel(private val dao: ResepDao) : ViewModel() {
         }
     }
 
+    fun undo(id: Long) {
+        viewModelScope.launch(Dispatchers.IO) {
+            dao.undoById(id)
+        }
+    }
+
     suspend fun getResep(id: Long): Resep? {
         return dao.getResepById(id)
     }
