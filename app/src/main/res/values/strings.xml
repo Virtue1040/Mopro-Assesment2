@@ -37,7 +37,7 @@
     <string name="hapus">Hapus resep</string>
     <string name="pesan_hapus_permanent">Hapus resep ini permanent?</string>
     <string name="pesan_hapus_semua_permanent">Hapus semua resep ini permanent?</string>
-    <string name="pesan_hapus">Hapus Resep ini?</string>
+    <string name="pesan_hapus">Hapus resep ini?</string>
     <string name="restore_semua">Restore semua</string>
     <string name="hapus_semua">Hapus semua</string>
     <string name="ubah_tema">Ubah tema</string>
