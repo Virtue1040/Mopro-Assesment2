@@ -80,14 +80,28 @@ fun RecycleBinScreen(navController: NavHostController) {
                 actions = {
                     ActionAll(
                         restoreAll = {
-                            viewModelDetail.undoAll()
-                            Toast.makeText(context,
-                                context.getString(R.string.semua_resep_restored),
-                                Toast.LENGTH_SHORT
-                            ).show()
+                            if (viewModel.dataDeleted.value.isNotEmpty()) {
+                                viewModelDetail.undoAll()
+                                Toast.makeText(context,
+                                    context.getString(R.string.semua_resep_restored),
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            } else {
+                                Toast.makeText(context,
+                                    context.getString(R.string.recycle_bin_kosong),
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
                         },
                         deleteAll = {
-                            showDialog = true
+                            if (viewModel.dataDeleted.value.isNotEmpty()) {
+                                showDialog = true
+                            } else {
+                                Toast.makeText(context,
+                                    context.getString(R.string.recycle_bin_kosong),
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
                         }
                     )
                 },
