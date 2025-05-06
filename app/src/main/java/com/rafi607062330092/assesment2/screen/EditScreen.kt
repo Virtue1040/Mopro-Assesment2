@@ -159,7 +159,10 @@ fun EditScreen(navController: NavController, id: Long? = null) {
                 bahan = if (it.isBlank()) {
                     listOf()
                 } else {
-                    it.split(",").map { it.trim() }
+                    it.split(",").mapNotNull {
+                        val trimmed = it.trim()
+                        if (trimmed.isBlank() || trimmed.length < 3) null else trimmed
+                    }
                 }
             },
             onLangkahChange = {
@@ -171,6 +174,7 @@ fun EditScreen(navController: NavController, id: Long? = null) {
 
         if (id != null && showDialog) {
             DisplayAlertDialog(
+                message = context.getString(R.string.pesan_hapus),
                 onDismissRequest = {
                     showDialog = false
                 }

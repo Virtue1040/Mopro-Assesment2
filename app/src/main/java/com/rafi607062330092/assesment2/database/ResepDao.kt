@@ -31,6 +31,15 @@ interface ResepDao {
     @Query("UPDATE resep SET isDelete = 1 WHERE id = :id")
     suspend fun deleteById(id: Long)
 
+    @Query("DELETE FROM resep WHERE isDelete = 1")
+    suspend fun hardDeleteAll()
+
+    @Query("DELETE FROM resep WHERE id = :id AND isDelete = 1")
+    suspend fun hardDeleteById(id: Long)
+
     @Query("UPDATE resep SET isDelete = 0 WHERE id = :id")
     suspend fun undoById(id: Long)
+
+    @Query("UPDATE resep Set isDelete = 0")
+    suspend fun undoAll()
 }

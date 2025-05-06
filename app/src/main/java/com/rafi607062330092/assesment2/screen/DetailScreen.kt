@@ -43,7 +43,7 @@ import com.rafi607062330092.assesment2.util.ViewModelFactory
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DetailScreen(navController: NavController, id: Long? = null) {
+fun DetailScreen(navController: NavController, id: Long) {
     val context = LocalContext.current
     val db = ResepDb.getInstance(context)
     val factory = ViewModelFactory(db.dao)
@@ -54,16 +54,17 @@ fun DetailScreen(navController: NavController, id: Long? = null) {
     var bahan by remember { mutableStateOf(listOf<String>()) }
     var langkah by remember { mutableStateOf("") }
     var tanggal by remember { mutableStateOf("") }
+    var isDeleted by remember { mutableStateOf(false) }
     var showDialog by remember { mutableStateOf(false) }
 
     LaunchedEffect(true) {
-        if (id == null) { return@LaunchedEffect }
         val data = viewModel.getResep(id) ?: return@LaunchedEffect
         judul = data.judul
         kategori = data.kategori
         bahan = data.bahan
         langkah = data.langkah
         tanggal = data.tanggal
+        isDeleted = data.isDelete
     }
 
     Scaffold(
@@ -79,7 +80,7 @@ fun DetailScreen(navController: NavController, id: Long? = null) {
                     titleContentColor = MaterialTheme.colorScheme.primary
                 ),
                 actions = {
-                    if (id != null) {
+                    if (!isDeleted) {
                         Action(
                             edit = {
                                 navController.navigate(Screen.FormUbah.withId(id))
@@ -115,8 +116,9 @@ fun DetailScreen(navController: NavController, id: Long? = null) {
             modifier = Modifier.padding(padding)
         )
 
-        if (id != null && showDialog) {
+        if (showDialog) {
             DisplayAlertDialog(
+                message = context.getString(R.string.pesan_hapus),
                 onDismissRequest = {
                     showDialog = false
                 }

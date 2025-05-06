@@ -46,7 +46,7 @@ fun SetupNavGraph(navController: NavHostController = rememberNavController()) {
                 type = NavType.LongType
             })
         ) { navBackStackEntry ->
-            val id = navBackStackEntry.arguments?.getLong(KEY_ID_RESEP)
+            val id = navBackStackEntry.arguments!!.getLong(KEY_ID_RESEP)
             DetailScreen(navController, id)
         }
         composable(

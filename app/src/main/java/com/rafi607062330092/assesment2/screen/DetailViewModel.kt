@@ -54,6 +54,24 @@ class DetailViewModel(private val dao: ResepDao) : ViewModel() {
         }
     }
 
+    fun hardDelete(id: Long) {
+        viewModelScope.launch(Dispatchers.IO) {
+            dao.hardDeleteById(id)
+        }
+    }
+
+    fun undoAll() {
+        viewModelScope.launch(Dispatchers.IO) {
+            dao.undoAll()
+        }
+    }
+
+    fun hardDeleteAll() {
+        viewModelScope.launch(Dispatchers.IO) {
+            dao.hardDeleteAll()
+        }
+    }
+
     suspend fun getResep(id: Long): Resep? {
         return dao.getResepById(id)
     }

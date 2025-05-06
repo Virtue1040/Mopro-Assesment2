@@ -5,6 +5,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.AlertDialog
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.rafi607062330092.assesment2.R
@@ -12,13 +13,14 @@ import com.rafi607062330092.assesment2.ui.theme.ThemeController
 
 @Composable
 fun DisplayAlertDialog(
+    message: String,
     onDismissRequest: () -> Unit,
     onConfirmation: () -> Unit
 ) {
     AlertDialog(
         text = {
             Text(
-                text = stringResource(R.string.pesan_hapus)
+                text = message
             )
         },
         confirmButton = {
@@ -53,6 +55,7 @@ fun DisplayAlertDialog(
 fun DialogPreview() {
     ThemeController {
         DisplayAlertDialog(
+            message = LocalContext.current.getString(R.string.pesan_hapus),
             onDismissRequest = {},
             onConfirmation = {}
         )
